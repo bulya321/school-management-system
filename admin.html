@@ -1,0 +1,664 @@
+<?php
+include 'auth.php';
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: new2.php');
+    exit();
+}
+?>
+<html lang="en">
+<head>
+    <title>School Management System - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	 <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://kit.fontawesome.com/au7b6d85339.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: url('sm_background.jpg') right no-repeat;
+            background-size: cover;
+        }
+        .main_box {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            position: relative;
+        }
+        .main_center {
+            margin-top: 105px;
+            padding: 20px;
+            min-height: calc(100vh - 105px - 200px); /* Adjusted for footer */
+        }
+        #sidebarmenu {
+            height: calc(100vh - 105px);
+            position: fixed;
+            left: 0;
+            top: 105px;
+            width: 250px;
+            transform: translateX(-250px);
+            transition: transform 250ms ease-in-out;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            z-index: 1;
+            overflow-y: auto;
+        }
+        .sidebarmenuinner {
+            margin: 0;
+            padding: 0;
+            border-top: 1px solid rgba(225, 225, 225, 0.10);
+            min-height: 100%;
+        }
+        .sidebarmenuinner li {
+            list-style: none;
+            color: darker;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 20px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(225, 225, 225, 0.10);
+            margin-left: 50px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .sidebarmenuinner li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        .sidebarmenuinner li span {
+            display: block;
+            font-size: 14px;
+            color: rgba(225, 225, 225, 0.50);
+        }
+        .sidebarmenuinner li a {
+            color: black;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebarmenuinner li.logout {
+            background-color: red;
+            text-align: center;
+            margin-left: 0;
+            width: 100%;
+        }
+        .sidebarmenuinner li.logout a {
+            color: white;
+        }
+        input[type="checkbox"]:checked ~ #sidebarmenu {
+            transform: translateX(0);
+        }
+        input[type="checkbox"] {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            display: none;
+        }
+        .sidebaricontoogle {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            cursor: pointer;
+            position: fixed;
+            z-index: 3;
+            top: 120px;
+            left: 15px;
+            height: 24px;
+            width: 24px;
+            background: lightblue;
+            display: block;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 2px;
+        }
+        .spinner {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            position: relative;
+            height: 4px;
+            width: 100%;
+            background: black;
+            margin: 3px 0;
+            border-radius: 2px;
+        }
+        .spinner.horizontal {
+            width: 100%;
+        }
+       
+        .sidebaricontoogle:hover {
+            transform: scale(1.1);
+        }
+        .sidebaricontoogle:hover .spinner {
+            background: #d0d0d0;
+        }
+        #header {
+            display: flex;
+            border: 1px dotted black;
+            align-items: center;
+            padding: 0px 0px;
+            height: 105px;
+            width: 100%;
+            background-color: lightblue;
+            box-shadow: 4px 4px 4px black;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+        #header img {
+            height: 120px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+        #header h1 {
+            text-align: center;
+            margin: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #header nav {
+            margin-right: 20px;
+        }
+        #header nav a {
+            margin-left: 15px;
+            text-decoration: none;
+            color: black;
+        }
+        .carousel {
+            margin-bottom: 20px;
+        }
+        .carousel-item img {
+            height: 300px;
+            object-fit: cover;
+            width: 100%;
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 40px 20px;
+            color: #333;
+            width: 100%;
+            margin-top: 20px;
+        }
+        footer h5 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        footer a {
+            color: #333;
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: #007bff;
+        }
+        footer .social-icons a {
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .table-responsive {
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+		
+		/* NEW: Add styling for buttons and edit form */
+.edit-btn, .delete-btn, .update-btn {
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+#editForm {
+  margin-top: 20px;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+#editForm input {
+  margin-right: 10px;
+  padding: 5px;
+}
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="school2.png" alt="School Logo">
+        <h1 align="center">School Management System - Admin</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="services.html">Services</a>
+        </nav>
+    </div>
+    <div class="main_box">
+        <input type="checkbox" id="opensidebarmenu">
+        <label for="opensidebarmenu" class="sidebaricontoogle">
+            <div class="spinner diagonal part-1"></div>
+            <div class="spinner horizontal"></div>
+            <div class="spinner diagonal part-2"></div>
+        </label>
+        <div id="sidebarmenu">
+            <ul class="sidebarmenuinner">
+                <li><span class="icon"><i class="fas fa-home"></i></span><a href="admin dashboard.html">Dashboard</a></li>
+                <li><span class="icon"><i class="fas fa-user-graduate"></i></span><a href="admin manage student.html">Manage Students</a></li>
+                <li><span class="icon"><i class="fas fa-chalkboard-teacher"></i></span><a href="admin manage teachers.html">Manage Teachers</a></li>
+                <li><span class="icon"><i class="fas fa-calendar-week"></i></span><a href="admin manage avents.html">Manage Events</a></li>
+                <li><span class="icon"><i class="fas fa-users"></i></span><a href="admin manage users.html">Manage Users</a></li>
+                <li><span class="icon"><i class="fas fa-cog"></i></span><a href="admin manage settings.html">System Settings</a></li>
+                <li class="logout"><a href="login page.html">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main_center">
+        <div id="schoolCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#schoolCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#schoolCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#schoolCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="th-gigapixel-standard v2-13000w.jpeg" class="d-block w-100" alt="Admin Slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Admin Dashboard</h5>
+                        <p>Manage all school operations efficiently.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="aaa-gigapixel-standard v2-13000w.jpeg" class="d-block w-100" alt="Users Slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Manage Users</h5>
+                        <p>Control access for students, teachers, and staff.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="download-gigapixel-standard v2-13000w.jpeg" class="d-block w-100" alt="Settings Slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>System Settings</h5>
+                        <p>Configure the system to meet your needs.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#schoolCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#schoolCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <section id="dashboard">
+            <h2>Admin Dashboard</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h4>Total Students</h4>
+                        <p>1,200</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h4>Total Teachers</h4>
+                        <p>80</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h4>Total Users</h4>
+                        <p>1,300</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="students">
+            <h2>Manage Students</h2>
+            <div class="table-responsive">
+                <table class="table table-striped" id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+					<tbody id="studentTableBody">
+
+                    <tbody>
+                        <tr>
+                            <td>001</td>
+                            <td>Sami</td>
+                            <td>10A</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-student" data-id="001" data-name="John Doe" data-class="10A">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-student" data-id="001">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>002</td>
+                            <td>Asad</td>
+                            <td>10B</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-student" data-id="002" data-name="Jane Smith" data-class="10B">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-student" data-id="002">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+			 <!-- NEW: Add Edit/Update Form -->
+  <div id="editForm" style="display:none;">
+    <input type="text" id="editName" placeholder="Name">
+    <input type="text" id="editRollNo" placeholder="Roll No">
+    <button onclick="saveEdit()">Save</button>
+    <button onclick="cancelEdit()">Cancel</button>
+  </div>
+
+        </section>
+		
+		
+		<div class="carousel-container">
+  <div id="schoolCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-item">
+      <img src="aaa-gigapixel-standard v2-13000w.jpeg" class="d-block w-100" alt="users Slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Manage Users</h5>
+        <p>Manage all school operations efficiently.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="download-gigapixel-standard v2-13000w.jpeg" class="d-block w-100" alt="settings Slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>System Settings</h5>
+        <p>Configure the system to meet your needs.</p>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#schoolCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#schoolCarousel" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+
+
+
+
+
+        <section id="teachers">
+            <h2>Manage Teachers</h2>
+            <div class="table-responsive">
+                <table class="table table-striped" id="teacherTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T01</td>
+                            <td>Ms. Aqib</td>
+                            <td>Methametics</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-teacher" data-id="T01" data-name="Ms. Aqib" data-subject="Mathematics">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-teacher" data-id="T01">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T02</td>
+                            <td>Mr. Adil</td>
+                            <td>Science</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-teacher" data-id="T02" data-name="Mr. Adil" data-subject="Science">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-teacher" data-id="T02">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="events">
+            <h2>Manage Events</h2>
+            <div class="dashboard-card">
+                <h4>Science Fair</h4>
+                <p>Date: May 10, 2025</p>
+                <p>Description: Annual science fair showcasing student projects.</p>
+                <button class="btn btn-sm btn-primary">Edit Event</button>
+            </div>
+            <div class="dashboard-card">
+                <h4>Parent-Teacher Meeting</h4>
+                <p>Date: May 15, 2025</p>
+                <p>Description: Discuss student progress with parents.</p>
+                <button class="btn btn-sm btn-primary">Edit Event</button>
+            </div>
+        </section>
+
+        <section id="users">
+            <h2>Manage Users</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>admin1</td>
+                            <td>Admin</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary">Edit</button>
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>teacher1</td>
+                            <td>Teacher</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary">Edit</button>
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <div class="mb-3">
+                            <label for="editId" class="form-label">ID</label>
+                            <input type="text" class="form-control" id="editId" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="editName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editField" class="form-label">Class/Subject</label>
+                            <input type="text" class="form-control" id="editField">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About Us</h5>
+                    <p>Our school is dedicated to providing quality education and fostering a supportive learning environment for all students.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="admin dashboard.html">Dashboard</a></li>
+                        <li><a href="admin manage student.html">Manage Students</a></li>
+                        <li><a href="admin manage teachers.html">Manage Teachers</a></li>
+                        <li><a href="admin manage avents.html">Manage Events</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 School St, City, Country</p>
+                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                    <p><i class="fas fa-envelope"></i> info@school.com</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p>© 2025 School Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+	<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    loadStudents();
+
+    document.getElementById('studentTableBody').addEventListener('click', function(e) {
+      if (e.target.classList.contains('edit-btn')) {
+        const row = e.target.closest('tr');
+        if (row) {
+          const name = row.cells[0].textContent;
+          const rollNo = row.cells[1].textContent;
+          document.getElementById('editName').value = name || '';
+          document.getElementById('editRollNo').value = rollNo || '';
+          document.getElementById('editForm').style.display = 'block';
+          row.setAttribute('data-editing', 'true');
+        }
+      }
+
+      if (e.target.classList.contains('delete-btn')) {
+        const row = e.target.closest('tr');
+        if (row && confirm('Are you sure you want to delete this student?')) {
+          row.remove();
+          saveStudents();
+        }
+      }
+
+      if (e.target.classList.contains('update-btn')) {
+        const row = e.target.closest('tr');
+        if (row) {
+   if (row.getAttribute('data-editing') === 'true') {
+            alert('Please save the changes first or cancel editing.');
+          } else {
+            document.getElementById('editForm').style.display = 'block';
+            row.setAttribute('data-editing', 'true');
+          }
+        }
+      }
+    });
+
+    window.saveEdit = function() {
+      const name = document.getElementById('editName').value;
+      const rollNo = document.getElementById('editRollNo').value;
+      const rows = document.getElementById('studentTableBody').getElementsByTagName('tr');
+      for (let row of rows) {
+        if (row.getAttribute('data-editing') === 'true') {
+          row.cells[0].textContent = name || 'N/A';
+          row.cells[1].textContent = rollNo || 'N/A';
+          row.removeAttribute('data-editing');
+          break;
+        }
+      }
+      document.getElementById('editForm').style.display = 'none';
+      saveStudents();
+    };
+
+    window.cancelEdit = function() {
+      document.getElementById('editForm').style.display = 'none';
+      const rows = document.getElementById('studentTableBody').getElementsByTagName('tr');
+      for (let row of rows) {
+        if (row.getAttribute('data-editing') === 'true') {
+          row.removeAttribute('data-editing');
+          break;
+        }
+      }
+    };
+
+    function loadStudents() {
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      const tbody = document.getElementById('studentTableBody');
+      if (tbody) {
+        tbody.innerHTML = '';
+        students.forEach(student => {
+          const row = tbody.insertRow();
+          row.insertCell(0).textContent = student.name || 'N/A';
+          row.insertCell(1).textContent = student.rollNo || 'N/A';
+          const actionCell = row.insertCell(2);
+          actionCell.innerHTML = <button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button> <button class="update-btn">Update</button>;
+        });
+      }
+    }
+
+    function saveStudents() {
+      const rows = document.getElementById('studentTableBody').getElementsByTagName('tr');
+      const students = [];
+    if (rows.length > 0) {
+        for (let row of rows) {
+          students.push({
+            name: row.cells[0].textContent,
+            rollNo: row.cells[1].textContent
+          });
+        }
+        localStorage.setItem('students', JSON.stringify(students));
+      }
+    }
+  });
+
+</script>
+
+
+   
+</body>
+
+
+</html>
+

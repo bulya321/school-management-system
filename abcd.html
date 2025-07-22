@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System - Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .sidebar { width: 200px; position: fixed; height: 100%; background: #333; color: white; padding-top: 20px; }
+        .sidebar a { color: white; text-decoration: none; display: block; padding: 10px; }
+        .sidebar a:hover { background: #555; }
+        .content { margin-left: 220px; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .actions a { color: #007bff; margin-right: 10px; text-decoration: none; }
+        .actions a:hover { text-decoration: underline; }
+        .nav-buttons { margin: 20px 0; }
+        .nav-buttons a { padding: 10px 20px; background: #007bff; color: white; text-decoration: none; margin-right: 10px; }
+        .nav-buttons a:hover { background: #0056b3; }
+        .card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .card h3 { margin-top: 0; }
+        .card p { margin: 5px 0; }
+        footer { text-align: center; padding: 10px; background: #f4f4f4; position: fixed; width: 100%; bottom: 0; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 15% auto; padding: 20px; width: 70%; max-width: 500px; }
+        .close { float: right; cursor: pointer; font-size: 20px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Navigation</h2>
+        <a href="#">Dashboard</a>
+        <a href="#">Manage Students</a>
+        <a href="#">Manage Teachers</a>
+        <a href="#">Manage Events</a>
+        <a href="#">Manage Users</a>
+        <a href="#">System Settings</a>
+        <a href="#">Logout</a>
+    </div>
+
+    <div class="content">
+        <div class="nav-buttons">
+            <a href="#">Previous</a>
+            <a href="#">Next</a>
+        </div>
+
+        <div class="card">
+            <h3>Admin Dashboard</h3>
+            <p>Manage all school operations efficiently.</p>
+        </div>
+        <div class="card">
+            <h3>Manage Users</h3>
+            <p>Control access for students, teachers, and staff.</p>
+        </div>
+        <div class="card">
+            <h3>System Settings</h3>
+            <p>Configure the system to meet your needs.</p>
+        </div>
+
+        <h2>Admin Dashboard</h2>
+        <div class="card">
+            <p>Total Students: <span id="totalStudents">1,200</span></p>
+            <p>Total Teachers: <span id="totalTeachers">80</span></p>
+            <p>Total Users: <span id="totalUsers">1,300</span></p>
+        </div>
+
+        <h2>Manage Students</h2>
+        <table id="studentsTable">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>Sami</td>
+                <td>10A</td>
+                <td class="actions"><a href="#" onclick="editItem('students', '001')">Edit</a> <a href="#" onclick="deleteItem('students', '001')">Delete</a></td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>Asad</td>
+                <td>10B</td>
+                <td class="actions"><a href="#" onclick="editItem('students', '002')">Edit</a> <a href="#" onclick="deleteItem('students', '002')">Delete</a></td>
+            </tr>
+        </table>
+
+        <h2>Manage Teachers</h2>
+        <table id="teachersTable">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Subject</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>T01</td>
+                <td>Ms. Aqib</td>
+                <td>Methametics</td>
+                <td class="actions"><a href="#" onclick="editItem('teachers', 'T01')">Edit</a> <a href="#" onclick="deleteItem('teachers', 'T01')">Delete</a></td>
+            </tr>
+            <tr>
+                <td>T02</td>
+                <td>Mr. Adil</td>
+                <td>Science</td>
+                <td class="actions"><a href="#" onclick="editItem('teachers', 'T02')">Edit</a> <a href="#" onclick="deleteItem('teachers', 'T02')">Delete</a></td>
+            </tr>
+        </table>
+
+        <h2>Manage Events</h2>
+        <div id="eventsDiv">
+            <div>
+                <strong>Science Fair</strong><br>
+                Date: May 10, 2025<br>
+                Description: Annual science fair showcasing student projects.<br>
+                <a href="#" onclick="editItem('events', 'E01')">Edit Event</a> <a href="#" onclick="deleteItem('events', 'E01')">Delete</a>
+            </div>
+            <div>
+                <strong>Parent-Teacher Meeting</strong><br>
+                Date: May 15, 2025<br>
+                Description: Discuss student progress with parents.<br>
+                <a href="#" onclick="editItem('events', 'E02')">Edit Event</a> <a href="#" onclick="deleteItem('events', 'E02')">Delete</a>
+            </div>
+        </div>
+
+        <h2>Manage Users</h2>
+        <table id="usersTable">
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>admin1</td>
+                <td>Admin</td>
+                <td class="actions"><a href="#" onclick="editItem('users', 'ADM001')">Edit</a> <a href="#" onclick="deleteItem('users', 'ADM001')">Delete</a></td>
+            </tr>
+            <tr>
+                <td>teacher1</td>
+                <td>Teacher</td>
+                <td class="actions"><a href="#" onclick="editItem('users', 'TCH001')">Edit</a> <a href="#" onclick="deleteItem('users', 'TCH001')">Delete</a></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Modal for Editing -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('editModal').style.display='none'">×</span>
+            <h2>Edit Record</h2>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div>
+                    <label>ID</label>
+                    <input type="text" id="editField1" readonly>
+                </div>
+                <div>
+                    <label>Name</label>
+                    <input type="text" id="editField2">
+                </div>
+                <div>
+                    <label>Class/Subject/Role/Date</label>
+                    <input type="text" id="editField3">
+                </div>
+                <button type="submit">Save changes</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 School Management System. All rights reserved.
+    </footer>
+
+    <script>
+        // Initial Data
+        let studentsData = JSON.parse(localStorage.getItem('studentsData')) || [
+            { id: '001', name: 'Sami', class: '10A' },
+            { id: '002', name: 'Asad', class: '10B' }
+        ];
+        let teachersData = JSON.parse(localStorage.getItem('teachersData')) || [
+            { id: 'T01', name: 'Ms. Aqib', subject: 'Methametics' },
+            { id: 'T02', name: 'Mr. Adil', subject: 'Science' }
+        ];
+        let eventsData = JSON.parse(localStorage.getItem('eventsData')) || [
+            { id: 'E01', name: 'Science Fair', date: 'May 10, 2025' },
+            { id: 'E02', name: 'Parent-Teacher Meeting', date: 'May 15, 2025' }
+        ];
+        let usersData = JSON.parse(localStorage.getItem('usersData')) || [
+            { id: 'ADM001', username: 'admin1', role: 'Admin' },
+            { id: 'TCH001', username: 'teacher1', role: 'Teacher' }
+        ];
+
+        // Save Data to Local Storage
+        function saveData() {
+            localStorage.setItem('studentsData', JSON.stringify(studentsData));
+            localStorage.setItem('teachersData', JSON.stringify(teachersData));
+            localStorage.setItem('eventsData', JSON.stringify(eventsData));
+            localStorage.setItem('usersData', JSON.stringify(usersData));
+        }
+
+        // Load and Display Data (Initial load handled by HTML, no reload needed)
+        function updateDisplay() {
+            // No need to reload tables as they are statically defined in HTML
+        }
+
+        // Delete Item
+        function deleteItem(type, id) {
+            if (confirm('Are you sure you want to delete?')) {
+                switch (type) {
+                    case 'students':
+                        studentsData = studentsData.filter(item => item.id !== id);
+                        document.querySelector(`#studentsTable tr td:contains("${id}")`).closest('tr').remove();
+                        break;
+                    case 'teachers':
+                        teachersData = teachersData.filter(item => item.id !== id);
+                        document.querySelector(`#teachersTable tr td:contains("${id}")`).closest('tr').remove();
+                        break;
+                    case 'events':
+                        eventsData = eventsData.filter(item => item.id !== id);
+                        document.querySelector(`#eventsDiv div:contains("${id}")`).remove();
+                        break;
+                    case 'users':
+                        usersData = usersData.filter(item => item.id !== id);
+                        document.querySelector(`#usersTable tr td:contains("${id}")`).closest('tr').remove();
+                        break;
+                }
+                saveData();
+            }
+        }
+
+        // Edit Item
+        function editItem(type, id) {
+            let item;
+            switch (type) {
+                case 'students':
+                    item = studentsData.find(i => i.id === id);
+                    break;
+                case 'teachers':
+                    item = teachersData.find(i => i.id === id);
+                    break;
+                case 'events':
+                    item = eventsData.find(i => i.id === id);
+                    break;
+                case 'users':
+                    item = usersData.find(i => i.id === id);
+                    break;
+            }
+            document.getElementById('editId').value = id;
+            document.getElementById('editField1').value = item.id;
+            document.getElementById('editField2').value = item.name || item.username;
+            document.getElementById('editField3').value = item.class || item.subject || item.role || item.date;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Save Edited Data
+        document.getElementById('editForm').onsubmit = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const name = document.getElementById('editField2').value;
+            const field3 = document.getElementById('editField3').value;
+
+            const type = ['students', 'teachers', 'events', 'users'].find(t => {
+                return document.getElementById(`${t}Table`) || document.getElementById('eventsDiv');
+            });
+
+            let dataArray;
+            switch (type) {
+                case 'students':
+                    dataArray = studentsData;
+                    break;
+                case 'teachers':
+                    dataArray = teachersData;
+                    break;
+                case 'events':
+                    dataArray = eventsData;
+                    break;
+                case 'users':
+                    dataArray = usersData;
+                    break;
+            }
+
+            const index = dataArray.findIndex(item => item.id === id);
+            if (index !== -1) {
+                dataArray[index].name = name || dataArray[index].username;
+                if (type === 'students') dataArray[index].class = field3;
+                else if (type === 'teachers') dataArray[index].subject = field3;
+                else if (type === 'events') dataArray[index].date = field3;
+                else if (type === 'users') dataArray[index].role = field3;
+                saveData();
+                // Update the displayed row
+                let row = document.querySelector(`#${type}Table tr td:contains("${id}")`)?.closest('tr') ||
+                          document.querySelector(`#eventsDiv div:contains("${id}")`);
+                if (row) {
+                    if (type === 'events') {
+                        row.innerHTML = `<strong>${dataArray[index].name}</strong><br>Date: ${dataArray[index].date}<br>Description: ${field3}<br><a href="#" onclick="editItem('events', '${id}')">Edit Event</a> <a href="#" onclick="deleteItem('events', '${id}')">Delete</a>`;
+                    } else {
+                        row.cells[1].innerText = dataArray[index].name || dataArray[index].username;
+                        row.cells[2].innerText = field3;
+                    }
+                }
+                document.getElementById('editModal').style.display = 'none';
+            }
+        };
+
+        // Custom :contains selector for querySelector
+        Element.prototype.contains = function(text) {
+            return this.innerText.includes(text);
+        };
+    </script>
+</body>
+</html>

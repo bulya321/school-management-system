@@ -1,0 +1,306 @@
+<html>
+
+	<head>
+		<title>
+			School Managment System
+		</title>
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+		<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+		
+		<style>
+		
+			*{
+			
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			
+			
+			}
+			body{
+				overflow :hidden;
+				background: url('sm_background.jpg') right no-repeat;
+				background-size: cover;
+				height: 100vh;
+				min-height:100vh;
+				box-sizing: border-box;
+				width: 100%;
+				position: relative;
+			}
+			
+			
+			.main_box{
+				display: block;
+				margin: 0 auto;
+				max-width: 100%;
+				box-shadow: none;
+				overflow: hidden;
+				z-index: 10;
+				position: relative;
+				
+				
+				
+				
+			}
+			.main{
+				margin: 0 auto;
+				display: block;
+				height: 100px;
+				margin-top: 60px;
+			
+			}
+			.maininner{
+				display: table;
+				height: 100%;
+				width: 100%;
+				text-align: center;
+				
+			}
+			.maininner div{
+				display: table-cell;
+				vertical-align: middle;
+				font-size: bold;
+				letter-spacing: 1.25px;
+			}
+			#sidebarmenu{
+				height: calc(100vh - 105px);
+				position: fixed;
+				left: 0;
+				top: 105;
+				width: 250px;
+				margin-top: 60px;
+				transform: translateX(-250px);
+				transition: transform 250ms ease-in-out;
+				background: rgba(225,225,225,0.1);
+				backdrop-filter: blur(5px);
+				z-index: 1;
+			}
+			.sidebarmenuinner{
+				margin: 0;
+				padding: 0;
+				border-top: 1px solid rgba(225, 225, 225, 0.10);
+				
+			}
+			.sidebarmenuinner li{
+				list-style: none;
+				color: #fff;
+				text-transform: uppercase;
+				font-weight: bold;
+				padding: 20px;
+				cursor: pointer;
+				margin-left: 50px;
+				border-bottom: 1px solid rgba(225,225,225,0.10);
+				transition: background-color 0.3s ease, transform 0.3s ease;
+			}
+			.sidebarmenuinner li:hover{
+				background-color: rgba(225,225,225,0.2);
+				transform: scale(1.05);
+			}
+			.sidebarmenuinner li span{
+				display: block;
+				
+				font-size: 14px;
+				color: rgba(225,225,225,0.50);
+			}
+			.sidebarmenuinner li a{
+				color: #fff;
+				text-transform: uppercase;
+				font-weight: bold;
+				cursor: pointer;
+				text-decoration: none;
+			}
+			.sidebarmenuinner li.logout {
+				background-color: red; 
+				text-align: center;
+				margin-left: 0;
+        }
+        .sidebarmenuinner li.logout a {
+            	color: white;
+		}
+			input[type="checkbox"]:checked ~#sidebarmenu{
+				transform: translateX(0);
+			}
+			input[type=checkbox]{
+				transition: all 0.3s;
+				box-sizing: border-box;
+				display: none;
+			}
+			.sidebaricontoogle{
+				transition: all 0.3s;
+				box-sizing: border-box;
+				cursor: pointer;
+				position: fixed;
+				z-index: 3;
+				display: block;
+				top: 120px;
+				left: 15px;
+				height: 22px;
+				width: 22px;
+				background: transparent;
+			}
+			.spinner{
+				transition: all 0.3s;
+				box-sizing: border-box;
+				position: relative;
+				height: 3px;
+				width: 100%;
+				margin: 4px 0;
+				background: white;
+			}
+			.spinner.horizontal {
+            width: 100%;
+        }
+        .spinner.diagonal.part-1 {
+            transform: rotate(45deg);
+            top: 5px;
+        }
+        .spinner.diagonal.part-2 {
+            transform: rotate(-45deg);
+            top: -5px;
+        }
+        
+        .sidebaricontoogle:hover .spinner {
+            background: #ddd; <!-- /* Hover effect for hamburger icon */-->
+        }
+
+			#header nav a {
+			
+				border: 1px solid blue;
+				padding: 3px 35px 3px 5px;
+				margin: 0px 5px;
+				background-color: navy;
+				background: #0000aa;
+				color: white;
+				text-decoration: none;
+				cursor: pointer;
+				transition: 1s;
+				
+				}
+				
+				#header nav a:hover {
+				
+						background-color: yellow;
+						color: navy;
+						padding: 3px 5px 3px 35px;
+
+						
+						}
+						
+				#header nav a:active {
+					
+					background-color: red;
+					}
+					
+				#header a:visited {
+				
+				}
+				
+				
+				
+			
+			}
+			
+			.logout-btn {
+				background-color: #ff4d4d; /* Red logout button */
+				color: white;
+				border: none;
+				padding: 10px;
+				border-radius: 5px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+			}
+
+			.logout-btn:hover {
+				background-color: #e60000; /* Darker red on hover */
+			}
+
+			#header{
+				
+				display: flex;
+				border: 1px dotted black;
+				align-items: center;
+				padding: 0px 0px;
+				height: 105px;
+				width:1370px;
+				background-color: lightblue;
+				box-shadow:4px 4px 4px black;
+				justify-content: space-between;
+				top: 0px;
+				
+			}
+			#header img {
+				height: 120px;
+				margin-right: 130px;
+				cursor: pointer;
+				
+						
+			{
+			#header h1{
+				
+				text-align: center;
+				margin: 0;
+				position: absolute;
+					
+			}
+			
+		
+		</style>
+
+	</head>
+
+	<body>
+	
+	 <div id="header">
+            <img src="img/school2.png">
+			<h1 align='center'> School Managment System </h1>
+			<nav>
+		<a href='#'> Home </a>
+		<a href='#'> About Us </a>
+		<a href='#'> Contact Us </a>
+		<a href='#'> Services </a>
+			</nav>
+			
+	 </div>
+	 <div class="main_box">
+	 
+	 <input type="checkbox" id="opensidebarmenu"id="opensidebarmenu">
+	 
+	 <label for="opensidebarmenu"class="sidebaricontoogle">
+	 <div class="spinner diagonal part-1"></div>
+	 <div class="spinner horizontal"></div>
+	 <div class="spinner diagonal part-2"></div></label>
+	 <div id="sidebarmenu">
+	 <i class="fas fa-bars">
+	 </label>
+	 
+	    <ul class="sidebarmenuinner">
+                <li><span class="icon"><i class="fas fa-home"></i></span><a href="#">
+				Dashboard</a></li>
+                <li><span class="icon"><i class="fas fa-user-graduate"></i></span><a href="#">
+				Students</a></li>
+                <li><span class="icon"><i class="fas fa-chalkboard-teacher"></i></span><a href="#">
+				Teachers</a></li>
+				<li><span class="icon"><i class="fas fa-calendar-week"></i></span><a href="#">
+				Events</a></li>
+				<li><span class="icon"><i class="fas fa-comments"></i></span><a href="#">
+				Feedback</a></li>
+				<li><span class="icon"><i class="fas fa-cog"></i></span><a href="#">
+				Settings</a></li>
+
+				
+            </ul>
+            </div>
+        
+		<div id='center' class="main center">
+		<div class="maininner">
+		
+		</div>
+		</div>
+		<!-- <div class"social_media"> 
+		<a href='#'> <i class="fab fa-facebook-f"></i> </a>
+		<a href='#'> <i class="fab fa-twitter"></i> </a>
+		<a href='#'> <i class="fab fa-instagram"></i> </a>
+		<!-- <a href='#'> <i class="fab fa-youtube"></i> </a> -->
+
+	</div>

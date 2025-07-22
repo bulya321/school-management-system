@@ -1,0 +1,94 @@
+<?php
+include 'auth.php';
+if ($_SESSION['role'] !== 'teacher') {
+    header('Location: new2.php');
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System - Teacher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        #header {
+            background-color: #6b48ff;
+            color: white;
+            padding: 10px;
+        }
+        #header img {
+            width: 60px;
+            vertical-align: middle;
+        }
+        nav {
+            background-color: #4a90e2;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #ffd700;
+        }
+        .content {
+            padding: 20px;
+            background-color: white;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #6b48ff;
+            color: white;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="school2.png" alt="School Logo">
+        <h1>School Management System - Teacher</h1>
+    </div>
+
+    <nav>
+        <a href="teacher dashboard.html" style="color: #ffd700;">Dashboard</a>
+        <a href="teacher profile.html">My Profile</a>
+        <a href="teacher my classes.html">My Classes</a>
+        <a href="teacher attendence.html">Attendance</a>
+        <a href="teacher events.html">Events</a>
+        <a href="login page.html" onclick="logout()" style="background-color: #ff4444; padding: 5px 10px; border-radius: 5px;">Logout</a>
+    </nav>
+
+    <div class="content">
+        <h2>Dashboard</h2>
+        <p>Students Taught: 60</p>
+        <p>Next Event: Parent-Teacher Meeting</p>
+    </div>
+
+    <footer>
+        <p>© 2025 School Management System. All rights reserved. Last updated: 09:18 PM PKT, Saturday, June 07, 2025.</p>
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login page.html";
+        }
+    </script>
+</body>
+</html>

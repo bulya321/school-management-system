@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>School Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/au7b6d85339.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden;
+            height: 100vh;
+            min-height: 100vh;
+            box-sizing: border-box;
+            background: url('sm_background.jpg') right no-repeat;
+            background-size: cover;
+        }
+        .main_box {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            box-shadow: none;
+            overflow: hidden;
+            z-index: 10;
+            position: relative;
+        }
+        .main_center {
+            margin-top: 105px;
+            padding: 20px;
+            height: calc(100vh - 105px);
+            overflow-y: auto;
+        }
+        #sidebarmenu {
+            height: calc(100vh - 105px);
+            position: fixed;
+            left: 0;
+            top: 105px;
+            width: 250px;
+            transform: translateX(-250px);
+            transition: transform 250ms ease-in-out;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            z-index: 1;
+            overflow-y: auto; /* Allow scrolling within sidebar if needed */
+        }
+        .sidebarmenuinner {
+            margin: 0;
+            padding: 0;
+            border-top: 1px solid rgba(225, 225, 225, 0.10);
+            min-height: 100%; /* Ensure content fills sidebar */
+        }
+        .sidebarmenuinner li {
+            list-style: none;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 20px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(225, 225, 225, 0.10);
+            margin-left: 50px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .sidebarmenuinner li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        .sidebarmenuinner li span {
+            display: block;
+            font-size: 14px;
+            color: rgba(225, 225, 225, 0.50);
+        }
+        .sidebarmenuinner li a {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebarmenuinner li.logout {
+            background-color: red;
+            text-align: center;
+            margin-left: 0;
+            width: 100%; /* Ensure full width */
+        }
+        .sidebarmenuinner li.logout a {
+            color: white;
+        }
+        input[type="checkbox"]:checked ~ #sidebarmenu {
+            transform: translateX(0);
+        }
+        input[type="checkbox"] {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            display: none;
+        }
+        .sidebaricontoogle {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            cursor: pointer;
+            position: fixed;
+            z-index: 3;
+            top: 120px;
+            left: 15px;
+            height: 24px;
+            width: 24px;
+            background: transparent;
+            display: block;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 2px;
+        }
+        .spinner {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            position: relative;
+            height: 4px;
+            width: 100%;
+            background: #f5f5f5;
+            margin: 3px 0;
+            border-radius: 2px;
+        }
+        .spinner.horizontal {
+            width: 100%;
+        }
+        .spinner.diagonal.part-1 {
+            transform: rotate(45deg);
+            top: 7px;
+        }
+        .spinner.diagonal.part-2 {
+            transform: rotate(-45deg);
+            top: -7px;
+        }
+        .sidebaricontoogle:hover {
+            transform: scale(1.1);
+        }
+        .sidebaricontoogle:hover .spinner {
+            background: #d0d0d0;
+        }
+        #header {
+            display: flex;
+            border: 1px dotted black;
+            align-items: center;
+            padding: 0px 0px;
+            height: 105px;
+            width: 100%;
+            background-color: lightblue;
+            box-shadow: 4px 4px 4px black;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+        #header img {
+            height: 120px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+        #header h1 {
+            text-align: center;
+            margin: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #header nav {
+            margin-right: 20px;
+        }
+        #header nav a {
+            margin-left: 15px;
+            text-decoration: none;
+            color: black;
+        }
+        .carousel {
+            margin-bottom: 20px;
+        }
+        .carousel-item img {
+            height: 300px;
+            object-fit: cover;
+            width: 100%;
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 40px 20px;
+            color: #333;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer h5 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        footer a {
+            color: #333;
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: #007bff;
+        }
+        footer .social-icons a {
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .table-responsive {
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="school2.png" alt="School Logo">
+        <h1 align="center">School Management System</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">About Us</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Services</a>
+        </nav>
+    </div>
+    <div class="main_box">
+        <input type="checkbox" id="opensidebarmenu">
+        <label for="opensidebarmenu" class="sidebaricontoogle">
+            <div class="spinner diagonal part-1"></div>
+            <div class="spinner horizontal"></div>
+            <div class="spinner diagonal part-2"></div>
+        </label>
+        <div id="sidebarmenu">
+            <ul class="sidebarmenuinner">
+                <li><span class="icon"><i class="fas fa-home"></i></span><a href="#dashboard">Dashboard</a></li>
+                <li><span class="icon"><i class="fas fa-user-graduate"></i></span><a href="#students">Students</a></li>
+                <li><span class="icon"><i class="fas fa-chalkboard-teacher"></i></span><a href="#teachers">Teachers</a></li>
+                <li><span class="icon"><i class="fas fa-calendar-week"></i></span><a href="#events">Events</a></li>
+                <li><span class="icon"><i class="fas fa-comments"></i></span><a href="#feedback">Feedback</a></li>
+                <li><span class="icon"><i class="fas fa-cog"></i></span><a href="#settings">Settings</a></li>
+                <li class="logout"><a href="#">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main_center">
+        <div id="schoolCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#schoolCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#schoolCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#schoolCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://via.placeholder.com/1200x300?text=Welcome+to+Our+School" class="d-block w-100" alt="Welcome Slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Welcome to Our School</h5>
+                        <p>Empowering students for a bright future.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://via.placeholder.com/1200x300?text=Upcoming+Events" class="d-block w-100" alt="Events Slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Upcoming Events</h5>
+                        <p>Join us for our annual science fair on May 10!</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://via.placeholder.com/1200x300?text=Our+Faculty" class="d-block w-100" alt="Faculty Slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Our Faculty</h5>
+                        <p>Meet our dedicated team of educators.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#schoolCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#schoolCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <section id="dashboard">
+            <h2>Dashboard</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h4>Total Students</h4>
+                        <p>1,200</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h4>Total Teachers</h4>
+                        <p>80</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h4>Upcoming Events</h4>
+                        <p>5</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="students">
+            <h2>Students</h2>
+            <div class="table-responsive">
+                <table class="table table-striped" id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>001</td>
+                            <td>John Doe</td>
+                            <td>10A</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-student" data-id="001" data-name="John Doe" data-class="10A">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-student" data-id="001">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>002</td>
+                            <td>Jane Smith</td>
+                            <td>10B</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-student" data-id="002" data-name="Jane Smith" data-class="10B">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-student" data-id="002">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="teachers">
+            <h2>Teachers</h2>
+            <div class="table-responsive">
+                <table class="table table-striped" id="teacherTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T01</td>
+                            <td>Ms. Emily Brown</td>
+                            <td>Mathematics</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-teacher" data-id="T01" data-name="Ms. Emily Brown" data-subject="Mathematics">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-teacher" data-id="T01">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T02</td>
+                            <td>Mr. David Wilson</td>
+                            <td>Science</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-teacher" data-id="T02" data-name="Mr. David Wilson" data-subject="Science">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-teacher" data-id="T02">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="events">
+            <h2>Events</h2>
+            <div class="dashboard-card">
+                <h4>Science Fair</h4>
+                <p>Date: May 10, 2025</p>
+                <p>Description: Annual science fair showcasing student projects.</p>
+            </div>
+            <div class="dashboard-card">
+                <h4>Parent-Teacher Meeting</h4>
+                <p>Date: May 15, 2025</p>
+                <p>Description: Discuss student progress with parents.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <div class="mb-3">
+                            <label for="editId" class="form-label">ID</label>
+                            <input type="text" class="form-control" id="editId" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="editName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editField" class="form-label">Class/Subject</label>
+                            <input type="text" class="form-control" id="editField">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About Us</h5>
+                    <p>Our school is dedicated to providing quality education and fostering a supportive learning environment for all students.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#students">Students</a></li>
+                        <li><a href="#teachers">Teachers</a></li>
+                        <li><a href="#events">Events</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 School St, City, Country</p>
+                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                    <p><i class="fas fa-envelope"></i> info@school.com</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p>© 2025 School Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Delete functionality
+        document.querySelectorAll('.delete-student, .delete-teacher').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                if (confirm(Are you sure you want to delete record with ID ${id}?)) {
+                    this.closest('tr').remove();
+                }
+            });
+        });
+
+        // Edit functionality
+        document.querySelectorAll('.edit-student, .edit-teacher').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const field = this.getAttribute('data-class') || this.getAttribute('data-subject');
+
+                document.getElementById('editId').value = id;
+                document.getElementById('editName').value = name;
+                document.getElementById('editField').value = field;
+
+                const modalLabel = this.classList.contains('edit-student') ? 'Edit Student' : 'Edit Teacher';
+                document.getElementById('editModalLabel').textContent = modalLabel;
+                document.getElementById('editField').previousElementSibling.textContent = this.classList.contains('edit-student') ? 'Class' : 'Subject';
+
+                const modal = new bootstrap.Modal(document.getElementById('editModal'));
+                modal.show();
+            });
+        });
+
+        // Save changes (pl
